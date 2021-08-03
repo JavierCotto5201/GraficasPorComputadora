@@ -37,19 +37,6 @@ class Renderer(object):
         self.framebuffer = [[white for x in range(self.width)]
                             for y in range(self.height)
                             ]
-        self.glViewPort(0, 0, self.width, self.height)
-     
-    #Normalized Device Coordinates coverter
-    def NDC(self, x_viewport, y_viewport):
-        xw = int((x_viewport + 1) * (self.width  / 2) + self.viewportx)
-        yw = int((y_viewport + 1) * (self.height / 2) + self.viewporty)
-        return xw, yw
-
-    def glViewPort(self, x, y, width, height):
-        self.viewportx = x
-        self.viewporty = y
-        self.vwidth = width
-        self.vheight = height
 
     def glClear(self):
         self.fill_map = [
@@ -65,8 +52,7 @@ class Renderer(object):
         self.CurrentColor = color(r, g, b)
         
     def glVertex(self, x, y, color):
-        x_window, y_window = self.NDC(x, y)
-        self.framebuffer[x_window][y_window] = color or self.CurrentColor
+        self.framebuffer[x][y] = color or self.CurrentColor
         
     def glFinish(self, filename):
         f = open(filename, 'bw')
@@ -100,15 +86,13 @@ class Renderer(object):
         f.close()
                  
     
-r = Renderer(1024, 768)
+r = Renderer(40, 40)
 r.glClearColor(255,255,255)
 r.glClear()
-
 r.Color(0,0,0)
 
-r.glViewPort(100, 100, 400, 400)
-r.glVertex(-1, 0.99, color(0, 0, 0))
-r.glVertex(-1, 0.5, color(0, 0, 0))
-r.glVertex(0.1, 0.5, color(0, 0, 0))
+r.glVertex(10, 10, black)
+r.glVertex(10, 11, black)
+r.glVertex(11, 10, black)
 
 r.glFinish('point.bmp')
