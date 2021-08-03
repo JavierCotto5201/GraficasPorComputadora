@@ -1,7 +1,6 @@
 import struct
 from SR3D import *
 
-
 def char(c):
     return struct.pack('=c', c.encode('ascii'))
 
