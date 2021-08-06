@@ -9,7 +9,8 @@ def contornoFigura(r, listaFig):
         for x in range(len(v)):
             r.line(v[x][0], v[x][1], v[(x+1)%len(v)][0], v[(x+1)%len(v)][1])
             
-#Método de Hundido 
+#Método de Hundido
+#Referencia: https://www.tutorialspoint.com/computer_graphics/polygon_filling_algorithm.htm
 def pintarFigura(r, x ,y , color):
     n = r.width
     m = r.height
