@@ -1,5 +1,5 @@
 import struct
-from lib import *
+from FVectores import *
 
 class Obj(object):
     def __init__(self, filename):

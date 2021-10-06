@@ -1,8 +1,8 @@
-from gl import *
+from Modelo import *
 import random
 from random import randint
 
-def gourad(render, **kwargs):
+def shader_Textura(render, **kwargs):
     w, v, u = kwargs['bar']
     tx, ty = kwargs['tex_coords']
     nA, nB, nC = kwargs['varying_normales']
@@ -70,7 +70,7 @@ estrellas(r)
 r.current_texture = Texture('./models/moon_normals.bmp')
 r.light = V3(0.5, 0, 0.5)
 r.load('./models/MOONF.obj', (-0.7, -0.7, -1), (0.5, 1.25, 0.25), (0, 0, 0))
-r.active_shader = gourad
+r.active_shader = shader_Textura
 r.draw_arrays('TRIANGLES')
 
 #TIE FIGHTER
@@ -102,4 +102,4 @@ r.active_shader = Meteor_shading
 r.draw_arrays('TRIANGLES')
 
 
-r.render()
+r.display()

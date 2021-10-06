@@ -1,8 +1,7 @@
 import struct
-from lib import *
+from FVectores import *
 from math import sin, cos
-
-from obj import Obj, Texture
+from Funcion_Leer import Obj, Texture
 
 class Renderer(object):
     def __init__(self, width, height):
@@ -58,7 +57,7 @@ class Renderer(object):
         
         f.close()
         
-    def render(self):
+    def display(self):
         self.write('Modelo1.bmp')
         
     def point(self, x, y, color = None):
