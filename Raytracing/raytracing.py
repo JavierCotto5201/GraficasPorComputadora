@@ -12,14 +12,6 @@ WHITE = color(255, 255, 255)
 
 MAX_RECURSION_DEPTH = 2
 
-'''def estrellas(render):
-    for z in range(0, 499):
-        x = randint(0, 499)
-        y = randint(0, 499)
-        if render.pixels[x][y] == BLACK:
-            render.point(x, y, WHITE)
-'''
-
 class Raytracer(object):
     def __init__(self, width, height):
         self.width = width
@@ -128,7 +120,7 @@ class Raytracer(object):
         
         for y in range(self.height):
             for x in range(self.width):
-                if random() > 0:
+                if random() > 0.8:
                     i = (2 * ((x + 0.5)/self.width) - 1) * aspect_ratio * tan(fov/2)
                     j = 1 - 2 * ((y + 0.5)/self.height) * tan(fov/2)
                     
@@ -155,7 +147,7 @@ class Raytracer(object):
 
 r = Raytracer(500, 500)
 triangles_vertex = []
-scene_triangles = []
+scene_objects = []
 
 r.light = Light(
         position=V3(-5, -12, 10),
@@ -163,14 +155,15 @@ r.light = Light(
         color=color(255, 255, 200)
     )
 
-
+#Materiales
 moon = Material(diffuse=color(158, 158, 158), albedo=[0.5, 0.3, 0.1, 0], spec=100)
 glass = Material(diffuse=color(0, 208, 216), albedo=[0.1, 8, 0.8, 0.8], spec=1500, refractive_index = 1.5)
-redPlastic = Material(diffuse=color(255, 0, 0), albedo=[0.6, 0.3, 0.5, 0], spec=1500)
+redPlastic = Material(diffuse=color(255, 0, 0), albedo=[0.6, 0.3, 0.5, 0], spec=15)
 blackMetal = Material(diffuse=color(35, 35, 34), albedo=[0.6, 0.7, 0.1, 0.1], spec=1500, refractive_index = 0.5)
 grass = Material(diffuse=color(57, 125, 16), albedo=[0.6, 0.1, 0.1, 0], spec=20)
-yellowPlastic = Material(diffuse=color(245, 255, 11), albedo=[0.6, 0.3, 0.5, 0], spec=1500)
+yellowPlastic = Material(diffuse=color(245, 255, 11), albedo=[0.6, 0.3, 0.5, 0], spec=15)
 
+#Estrellas(Funciona solamente cuando no se renderiza al 100% de definición)
 for z in range(0, 499):
     x = randint(0, 499)
     y = randint(0, 499)
@@ -179,50 +172,49 @@ for z in range(0, 499):
 
 
 #4.5, -14, -15
-triangles_vertex = r.Load('./modelos/AU2.obj', (10, -10, -15), (2000, 2000, 2000))
+triangles_vertex = r.Load('./modelos/AU2.obj', (8, -10, -10), (2000, 2000, 2000))
 
 for triangle_vertex in triangles_vertex:
-    scene_triangles.append(Triangle(triangle_vertex, yellowPlastic))
+    scene_objects.append(Triangle(triangle_vertex, yellowPlastic))
 
-r.scene = scene_triangles
-
+r.scene = scene_objects
 
 
 #MOGUS
 #PIERNAS
-scene_triangles.append(Cube(V3(1.5, 2.8, -9), 2, redPlastic))
-scene_triangles.append(Cube(V3(-1.5, 2.8, -9), 2, redPlastic))
+scene_objects.append(Cube(V3(1.5, 2.8, -9), 2, redPlastic))
+scene_objects.append(Cube(V3(-1.5, 2.8, -9), 2, redPlastic))
 
 
 #TORSO
-scene_triangles.append(Cube(V3(0, 0.5, -12), 6, redPlastic))
-scene_triangles.append(Cube(V3(0, -2.7, -12), 6, redPlastic))
+scene_objects.append(Cube(V3(0, 0.5, -12), 6, redPlastic))
+scene_objects.append(Cube(V3(0, -2.7, -12), 6, redPlastic))
 
 #VISOR DEL MOGUS
-scene_triangles.append(Cube(V3(0, -2, -8), 1, blackMetal))
-scene_triangles.append(Cube(V3(-1, -2, -8), 1, blackMetal))
-scene_triangles.append(Cube(V3(1, -2, -8), 1, blackMetal))
+scene_objects.append(Cube(V3(0, -2, -8), 1, blackMetal))
+scene_objects.append(Cube(V3(-1, -2, -8), 1, blackMetal))
+scene_objects.append(Cube(V3(1, -2, -8), 1, blackMetal))
 
-scene_triangles.append(Cube(V3(2, -3, -8), 1, blackMetal))
-scene_triangles.append(Cube(V3(1, -3, -8), 1, glass))
-scene_triangles.append(Cube(V3(0, -3, -8), 1, glass))
-scene_triangles.append(Cube(V3(-1, -3, -8), 1, glass))
-scene_triangles.append(Cube(V3(-2, -3, -8), 1, blackMetal))
+scene_objects.append(Cube(V3(2, -3, -8), 1, blackMetal))
+scene_objects.append(Cube(V3(1, -3, -8), 1, glass))
+scene_objects.append(Cube(V3(0, -3, -8), 1, glass))
+scene_objects.append(Cube(V3(-1, -3, -8), 1, glass))
+scene_objects.append(Cube(V3(-2, -3, -8), 1, blackMetal))
 
-scene_triangles.append(Cube(V3(0, -4, -8), 1, blackMetal))
-scene_triangles.append(Cube(V3(-1, -4, -8), 1, blackMetal))
-scene_triangles.append(Cube(V3(1, -4, -8), 1, blackMetal))
+scene_objects.append(Cube(V3(0, -4, -8), 1, blackMetal))
+scene_objects.append(Cube(V3(-1, -4, -8), 1, blackMetal))
+scene_objects.append(Cube(V3(1, -4, -8), 1, blackMetal))
 
 
 #GRAMA
-scene_triangles.append(Cube(V3(-10, 6.7, -14), 10, grass))
-scene_triangles.append(Cube(V3(0, 6.7, -14), 10, grass))
-scene_triangles.append(Cube(V3(10, 6.7, -14), 10, grass))
+scene_objects.append(Cube(V3(-10, 6.7, -14), 10, grass))
+scene_objects.append(Cube(V3(0, 6.7, -14), 10, grass))
+scene_objects.append(Cube(V3(10, 6.7, -14), 10, grass))
 
 #LUNA
-scene_triangles.append(Sphere(V3(-8, -7.5, -12), 1, moon))
+scene_objects.append(Sphere(V3(-8, -7.5, -12), 1, moon))
 
-r.scene = scene_triangles
+r.scene = scene_objects
 r.render()
 r.write('Raytracing.bmp')
 
