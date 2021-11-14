@@ -120,7 +120,7 @@ class Raytracer(object):
         
         for y in range(self.height):
             for x in range(self.width):
-                if random() > 0.8:
+                if random() > 0:
                     i = (2 * ((x + 0.5)/self.width) - 1) * aspect_ratio * tan(fov/2)
                     j = 1 - 2 * ((y + 0.5)/self.height) * tan(fov/2)
                     
@@ -156,23 +156,23 @@ r.light = Light(
     )
 
 #Materiales
-moon = Material(diffuse=color(158, 158, 158), albedo=[0.5, 0.3, 0.1, 0], spec=100)
+moon = Material(diffuse=color(158, 158, 158), albedo=[0.5, 0.3, 0, 0], spec=100)
 glass = Material(diffuse=color(0, 208, 216), albedo=[0.1, 8, 0.8, 0.8], spec=1500, refractive_index = 1.5)
-redPlastic = Material(diffuse=color(255, 0, 0), albedo=[0.6, 0.3, 0.5, 0], spec=15)
+redPlastic = Material(diffuse=color(255, 0, 0), albedo=[0.6, 0.3, 0, 0], spec=15)
 blackMetal = Material(diffuse=color(35, 35, 34), albedo=[0.6, 0.7, 0.1, 0.1], spec=1500, refractive_index = 0.5)
-grass = Material(diffuse=color(57, 125, 16), albedo=[0.6, 0.1, 0.1, 0], spec=20)
-yellowPlastic = Material(diffuse=color(245, 255, 11), albedo=[0.6, 0.3, 0.5, 0], spec=15)
+grass = Material(diffuse=color(57, 125, 16), albedo=[0.6, 0.1, 0, 0], spec=20)
+yellowPlastic = Material(diffuse=color(245, 255, 11), albedo=[0.6, 0.3, 0, 0], spec=15)
 
 #Estrellas(Funciona solamente cuando no se renderiza al 100% de definición)
 for z in range(0, 499):
     x = randint(0, 499)
     y = randint(0, 499)
     if r.pixels[x][y] == BLACK:
-        r.point(x, y, WHITE)
+        r.point(x, y, color(255, 245, 51))
 
 
 #4.5, -14, -15
-triangles_vertex = r.Load('./modelos/AU2.obj', (8, -10, -10), (2000, 2000, 2000))
+triangles_vertex = r.Load('./modelos/AU2.obj', (8, -8, -10), (2000, 2000, 2000))
 
 for triangle_vertex in triangles_vertex:
     scene_objects.append(Triangle(triangle_vertex, yellowPlastic))
@@ -184,7 +184,6 @@ r.scene = scene_objects
 #PIERNAS
 scene_objects.append(Cube(V3(1.5, 2.8, -9), 2, redPlastic))
 scene_objects.append(Cube(V3(-1.5, 2.8, -9), 2, redPlastic))
-
 
 #TORSO
 scene_objects.append(Cube(V3(0, 0.5, -12), 6, redPlastic))
@@ -204,7 +203,6 @@ scene_objects.append(Cube(V3(-2, -3, -8), 1, blackMetal))
 scene_objects.append(Cube(V3(0, -4, -8), 1, blackMetal))
 scene_objects.append(Cube(V3(-1, -4, -8), 1, blackMetal))
 scene_objects.append(Cube(V3(1, -4, -8), 1, blackMetal))
-
 
 #GRAMA
 scene_objects.append(Cube(V3(-10, 6.7, -14), 10, grass))
