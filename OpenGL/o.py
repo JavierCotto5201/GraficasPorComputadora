@@ -1,5 +1,6 @@
 import pygame
 import numpy
+import shaderCreator as sC
 from obj import *
 from OpenGL.GL import *
 from OpenGL.GL.shaders import compileProgram, compileShader
@@ -11,6 +12,7 @@ glClearColor(0.1, 0.2, 0.5, 1.0)
 glEnable(GL_DEPTH_TEST)
 clock = pygame.time.Clock()
 
+#SHADER 1
 vertex_shader = """
 #version 460
 
@@ -23,8 +25,8 @@ out vec3 mycolor;
 
 void main() 
 {
-  gl_Position = theMatrix * vec4(position.x, position.y, position.z, 1);
-  mycolor = ccolor;
+gl_Position = theMatrix * vec4(position.x, position.y, position.z, 1);
+mycolor = ccolor;
 }
 """
 
@@ -37,18 +39,50 @@ in vec3 mycolor;
 
 void main()
 {
-  if (mod(clock/10, 2) == 0) {
+if (mod(clock/10, 2) == 0) {
     fragColor = vec4(mycolor.xyz, 1.0f);
-  } else {
+} else {
     fragColor = vec4(mycolor.zxy, 1.0f);
-  }
+}
 }
 """
 
 cvs = compileShader(vertex_shader, GL_VERTEX_SHADER)
 cfs = compileShader(fragment_shader, GL_FRAGMENT_SHADER)
-
 shader = compileProgram(cvs, cfs)
+
+vertex_shader1 = """
+#version 460
+layout (location = 0) in vec3 position;
+layout (location = 1) in vec3 ccolor;
+
+uniform mat4 theMatrix;
+
+out vec3 mycolor;
+
+void main() 
+{
+gl_Position = theMatrix * vec4(position.x, position.y, position.z, 1);
+mycolor = ccolor;
+}
+"""
+
+fragment_shader1 = """
+#version 460
+layout(location = 0) out vec4 fragColor;
+
+uniform int clock;
+in vec3 mycolor;
+
+void main()
+{
+if (mod(clock/10, 2) == 0) {
+    fragColor = vec4(mycolor.xxx, 1.0f);
+} else {
+    fragColor = vec4(mycolor.xxx, 1.0f);
+}
+}
+"""
 
 mesh = Obj('./Tie_FighterF.obj')
 
@@ -106,7 +140,6 @@ glEnableVertexAttribArray(1)
 
 glUseProgram(shader)
 
-
 from math import sin
 
 def render(a):
@@ -138,7 +171,7 @@ while running:
 
   render(a)
   a += 1
-
+  
   glUniform1i(
     glGetUniformLocation(shader, 'clock'),
     a
@@ -155,3 +188,15 @@ while running:
     if event.type == pygame.KEYDOWN:
       if event.key == pygame.K_a:
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
+
+      if event.key == pygame.K_q:
+        cvs = compileShader(vertex_shader1, GL_VERTEX_SHADER)
+        cfs = compileShader(fragment_shader1, GL_FRAGMENT_SHADER)
+        shader = compileProgram(cvs, cfs)
+        glUseProgram(shader)
+
+      if event.key == pygame.K_d:
+        cvs = compileShader(vertex_shader, GL_VERTEX_SHADER)
+        cfs = compileShader(fragment_shader, GL_FRAGMENT_SHADER)
+        shader = compileProgram(cvs, cfs)
+        glUseProgram(shader)
