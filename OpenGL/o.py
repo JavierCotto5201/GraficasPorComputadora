@@ -75,11 +75,7 @@ in vec3 mycolor;
 
 void main()
 {
-if (mod(clock/10, 2) == 0) {
-    fragColor = vec4(mycolor.xxx, 1.0f);
-} else {
-    fragColor = vec4(mycolor.xxx, 1.0f);
-}
+  fragColor = vec4(mycolor.xxx, 5.0f);
 }
 """
 
@@ -166,10 +162,6 @@ def render(a, rotation, zoom):
 
   glViewport(0, 0, 1200, 720)
 
-movingX = 0
-movingY = 0
-movingZ = 0
-
 a = 0
 running = True
 while running:
@@ -193,18 +185,28 @@ while running:
     if event.type == pygame.QUIT:
       running = False
     if event.type == pygame.KEYDOWN:
-      if event.key == pygame.K_a:
+
+      #Just underlined polygon
+      if event.key == pygame.K_3:
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
 
-      #change shader
-      if event.key == pygame.K_q:
+      #Fill polygon
+      if event.key == pygame.K_4:
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
+      
+      #Just Vertex Points
+      if event.key == pygame.K_5:
+        glPolygonMode(GL_FRONT_AND_BACK, GL_POINT)
+
+      #change to 2nd shader
+      if event.key == pygame.K_2:
         cvs = compileShader(vertex_shader1, GL_VERTEX_SHADER)
         cfs = compileShader(fragment_shader1, GL_FRAGMENT_SHADER)
         shader = compileProgram(cvs, cfs)
         glUseProgram(shader)
 
       #return to 1st shader
-      if event.key == pygame.K_d:
+      if event.key == pygame.K_1:
         cvs = compileShader(vertex_shader, GL_VERTEX_SHADER)
         cfs = compileShader(fragment_shader, GL_FRAGMENT_SHADER)
         shader = compileProgram(cvs, cfs)
@@ -212,7 +214,7 @@ while running:
       
       #Zoom In
       if event.key == pygame.K_i:
-        if zoom <= 9:
+        if zoom <= 6:
           zoom += 1
 
       #Zoom Out
