@@ -1,6 +1,5 @@
 import pygame
 import numpy
-import shaderCreator as sC
 from obj import *
 from OpenGL.GL import *
 from OpenGL.GL.shaders import compileProgram, compileShader
@@ -140,14 +139,17 @@ glEnableVertexAttribArray(1)
 
 glUseProgram(shader)
 
-from math import sin
 
-def render(a):
+from math import sin
+rotation = 5
+zoom = 1
+
+def render(a, rotation, zoom):
   i = glm.mat4(1)
 
   translate = glm.translate(i, glm.vec3(0, 0, -5))
-  rotate = glm.rotate(i, glm.radians(a), glm.vec3(0, 1, 0))
-  scale = glm.scale(i, glm.vec3(1, 1, 1))
+  rotate = glm.rotate(i, glm.radians(rotation), glm.vec3(0, 1, 0))
+  scale = glm.scale(i, glm.vec3(zoom, zoom, zoom))
 
   model = translate * rotate * scale
   view = glm.lookAt(glm.vec3(0, 0, 20), glm.vec3(0, 0, 0), glm.vec3(0, 1, 0))
@@ -162,14 +164,19 @@ def render(a):
     glm.value_ptr(theMatrix)
   )
 
-glViewport(0, 0, 1200, 720)
+  glViewport(0, 0, 1200, 720)
+
+movingX = 0
+movingY = 0
+movingZ = 0
 
 a = 0
 running = True
 while running:
+  rotation += 1
   glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
 
-  render(a)
+  render(a, rotation, zoom)
   a += 1
   
   glUniform1i(
@@ -189,14 +196,35 @@ while running:
       if event.key == pygame.K_a:
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
 
+      #change shader
       if event.key == pygame.K_q:
         cvs = compileShader(vertex_shader1, GL_VERTEX_SHADER)
         cfs = compileShader(fragment_shader1, GL_FRAGMENT_SHADER)
         shader = compileProgram(cvs, cfs)
         glUseProgram(shader)
 
+      #return to 1st shader
       if event.key == pygame.K_d:
         cvs = compileShader(vertex_shader, GL_VERTEX_SHADER)
         cfs = compileShader(fragment_shader, GL_FRAGMENT_SHADER)
         shader = compileProgram(cvs, cfs)
         glUseProgram(shader)
+      
+      #Zoom In
+      if event.key == pygame.K_i:
+        if zoom <= 9:
+          zoom += 1
+
+      #Zoom Out
+      if event.key == pygame.K_o:
+        if zoom >= 2:
+          zoom -= 1
+      
+      #Por alguna razón el numpad no lee la entrada de los botones
+      # + Rotate Right
+      if event.key == pygame.K_PLUS:
+        rotation += 10
+      
+      #- Rotate Left
+      if event.key == pygame.K_MINUS:
+        rotation -= 10
